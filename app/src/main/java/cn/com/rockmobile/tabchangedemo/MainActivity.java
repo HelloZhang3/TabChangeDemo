@@ -2,17 +2,18 @@ package cn.com.rockmobile.tabchangedemo;
 
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -27,11 +28,21 @@ public class MainActivity extends AppCompatActivity {
     private int offset = 0;// 动画图片偏移量
     private int currIndex = 0;// 当前页卡编号
     private int bmpW;// 动画图片宽度
-
+    private int screenW;//屏幕宽度
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
+        DisplayMetrics dm = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(dm);
+        screenW = dm.widthPixels;// 获取分辨率宽度
+
+        cursor = (ImageView) findViewById(R.id.cursor);
+        //设置bar宽度为三分之一屏幕宽度
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(screenW / 3, 10);
+        cursor.setLayoutParams(layoutParams);
 
         t1 = (TextView) findViewById(R.id.text1);
         t2 = (TextView) findViewById(R.id.text2);
@@ -48,12 +59,8 @@ public class MainActivity extends AppCompatActivity {
      * 初始化动画
      */
     private void InitImageView() {
-        cursor = (ImageView) findViewById(R.id.cursor);
         bmpW = BitmapFactory.decodeResource(getResources(), R.mipmap.banner_color_bar1)
                 .getWidth();// 获取图片宽度
-        DisplayMetrics dm = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(dm);
-        int screenW = dm.widthPixels;// 获取分辨率宽度
         offset = (screenW / 3 - bmpW) / 2;// 计算偏移量
         Matrix matrix = new Matrix();
         matrix.postTranslate(offset, 0);
